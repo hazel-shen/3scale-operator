@@ -5,7 +5,10 @@ import (
 	"strconv"
 
 	"github.com/3scale/3scale-operator/pkg/3scale/amp/component"
+	"github.com/3scale/3scale-operator/pkg/3scale/amp/product"
+	appsv1alpha1 "github.com/3scale/3scale-operator/pkg/apis/apps/v1alpha1"
 	v1 "k8s.io/api/core/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func (o *OperatorApicastOptionsProvider) GetApicastOptions() (*component.ApicastOptions, error) {
@@ -13,6 +16,7 @@ func (o *OperatorApicastOptionsProvider) GetApicastOptions() (*component.Apicast
 	optProv.AppLabel(*o.APIManagerSpec.AppLabel)
 	optProv.TenantName(*o.APIManagerSpec.TenantName)
 	optProv.WildcardDomain(o.APIManagerSpec.WildcardDomain)
+	optProv.ImageTag(product.ThreescaleRelease)
 	optProv.ManagementAPI(*o.APIManagerSpec.Apicast.ApicastManagementAPI)
 	optProv.OpenSSLVerify(strconv.FormatBool(*o.APIManagerSpec.Apicast.OpenSSLVerify))        // TODO is this a good place to make the conversion?
 	optProv.ResponseCodes(strconv.FormatBool(*o.APIManagerSpec.Apicast.IncludeResponseCodes)) // TODO is this a good place to make the conversion?
@@ -36,4 +40,13 @@ func (o *OperatorApicastOptionsProvider) setResourceRequirementsOptions(b *compo
 func (o *OperatorApicastOptionsProvider) setReplicas(b *component.ApicastOptionsBuilder) {
 	b.StagingReplicas(int32(*o.APIManagerSpec.Apicast.StagingSpec.Replicas))
 	b.ProductionReplicas(int32(*o.APIManagerSpec.Apicast.ProductionSpec.Replicas))
+}
+
+func Apicast(cr *appsv1alpha1.APIManager, client client.Client) (*component.Apicast, error) {
+	optsProvider := OperatorApicastOptionsProvider{APIManagerSpec: &cr.Spec, Namespace: cr.Namespace, Client: client}
+	opts, err := optsProvider.GetApicastOptions()
+	if err != nil {
+		return nil, err
+	}
+	return component.NewApicast(opts), nil
 }

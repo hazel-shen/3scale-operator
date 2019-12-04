@@ -15,6 +15,7 @@ type ApicastOptions struct {
 	responseCodes  string
 	tenantName     string
 	wildcardDomain string
+	imageTag       string
 
 	// non required options
 	productionResourceRequirements *v1.ResourceRequirements
@@ -49,6 +50,10 @@ func (a *ApicastOptionsBuilder) TenantName(tenantName string) {
 
 func (a *ApicastOptionsBuilder) WildcardDomain(wildcardDomain string) {
 	a.options.wildcardDomain = wildcardDomain
+}
+
+func (a *ApicastOptionsBuilder) ImageTag(tag string) {
+	a.options.imageTag = tag
 }
 
 func (a *ApicastOptionsBuilder) ProductionResourceRequirements(resourceRequirements v1.ResourceRequirements) {
@@ -96,6 +101,9 @@ func (a *ApicastOptionsBuilder) setRequiredOptions() error {
 	}
 	if a.options.wildcardDomain == "" {
 		return fmt.Errorf("no wildcard domain has been provided")
+	}
+	if a.options.imageTag == "" {
+		return fmt.Errorf("no image tag has been provided")
 	}
 
 	return nil
