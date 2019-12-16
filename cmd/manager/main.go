@@ -277,3 +277,30 @@ func filterGKVsFromAddToScheme(gvks []schema.GroupVersionKind) []schema.GroupVer
 
 	return ownGVKs
 }
+
+func updateMetricServiceLabels(ctx context.Context, cfg *rest.Config, service *v1.Service) error {
+	if service == nil {
+		return fmt.Errorf("service doesn't exist")
+	}
+
+	kclient, err := client.New(cfg, client.Options{})
+	if err != nil {
+		return err
+	}
+
+	updatedLabels := map[string]string{
+		"monitoring-key": "middleware",
+		"app":            appsv1alpha1.Default3scaleAppLabel,
+	}
+	for k, v := range service.ObjectMeta.Labels {
+		updatedLabels[k] = v
+	}
+	service.ObjectMeta.Labels = updatedLabels
+
+	err = kclient.Update(ctx, service)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
