@@ -25,6 +25,10 @@ help: Makefile
 vendor:
 	@GO111MODULE=on $(GO) mod vendor
 
+## tidy: tidy up dependencies
+tidy:
+	@GO111MODULE=on go mod tidy
+
 IMAGE ?= quay.io/3scale/3scale-operator
 SOURCE_VERSION ?= master
 VERSION ?= v0.0.1
