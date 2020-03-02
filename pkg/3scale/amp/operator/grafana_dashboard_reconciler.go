@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/3scale/3scale-operator/pkg/helper"
-	integreatlyv1alpha1 "github.com/integr8ly/grafana-operator/pkg/apis/integreatly/v1alpha1"
+	grafanav1alpha1 "github.com/integr8ly/grafana-operator/v3/pkg/apis/integreatly/v1alpha1"
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
@@ -17,7 +17,7 @@ import (
 var ErrGrafanaDashboardsNotPresent = errors.New("no GrafanaDashboard registered with the API")
 
 type GrafanaDashboardReconciler interface {
-	IsUpdateNeeded(desired, existing *integreatlyv1alpha1.GrafanaDashboard) bool
+	IsUpdateNeeded(desired, existing *grafanav1alpha1.GrafanaDashboard) bool
 }
 
 type GrafanaDashboardBaseReconciler struct {
@@ -32,7 +32,7 @@ func NewGrafanaDashboardBaseReconciler(baseAPIManagerLogicReconciler BaseAPIMana
 	}
 }
 
-func (r *GrafanaDashboardBaseReconciler) Reconcile(desired *integreatlyv1alpha1.GrafanaDashboard) error {
+func (r *GrafanaDashboardBaseReconciler) Reconcile(desired *grafanav1alpha1.GrafanaDashboard) error {
 	objectInfo := ObjectInfo(desired)
 
 	exists, err := r.hasGrafanaDashboards()
@@ -44,7 +44,7 @@ func (r *GrafanaDashboardBaseReconciler) Reconcile(desired *integreatlyv1alpha1.
 		return nil
 	}
 
-	existing := &integreatlyv1alpha1.GrafanaDashboard{}
+	existing := &grafanav1alpha1.GrafanaDashboard{}
 	err = r.Client().Get(
 		context.TODO(),
 		types.NamespacedName{Name: desired.Name, Namespace: r.apiManager.GetNamespace()},
@@ -78,11 +78,11 @@ func (r *GrafanaDashboardBaseReconciler) hasGrafanaDashboards() (bool, error) {
 	dc := discovery.NewDiscoveryClientForConfigOrDie(r.cfg)
 
 	return k8sutil.ResourceExists(dc,
-		integreatlyv1alpha1.SchemeGroupVersion.String(),
-		integreatlyv1alpha1.GrafanaDashboardKind)
+		grafanav1alpha1.SchemeGroupVersion.String(),
+		grafanav1alpha1.GrafanaDashboardKind)
 }
 
-func (r *GrafanaDashboardBaseReconciler) isUpdateNeeded(desired, existing *integreatlyv1alpha1.GrafanaDashboard) (bool, error) {
+func (r *GrafanaDashboardBaseReconciler) isUpdateNeeded(desired, existing *grafanav1alpha1.GrafanaDashboard) (bool, error) {
 	updated := helper.EnsureObjectMeta(&existing.ObjectMeta, &desired.ObjectMeta)
 
 	updatedTmp, err := r.ensureOwnerReference(existing)
@@ -105,6 +105,6 @@ func NewCreateOnlyGrafanaDashboardReconciler() *CreateOnlyGrafanaDashboardReconc
 	return &CreateOnlyGrafanaDashboardReconciler{}
 }
 
-func (r *CreateOnlyGrafanaDashboardReconciler) IsUpdateNeeded(desired, existing *integreatlyv1alpha1.GrafanaDashboard) bool {
+func (r *CreateOnlyGrafanaDashboardReconciler) IsUpdateNeeded(desired, existing *grafanav1alpha1.GrafanaDashboard) bool {
 	return false
 }

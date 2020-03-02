@@ -3,7 +3,7 @@ package operator
 import (
 	"github.com/3scale/3scale-operator/pkg/3scale/amp/component"
 	monitoringv1 "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
-	integreatlyv1alpha1 "github.com/integr8ly/grafana-operator/pkg/apis/integreatly/v1alpha1"
+	grafanav1alpha1 "github.com/integr8ly/grafana-operator/v3/pkg/apis/integreatly/v1alpha1"
 	appsv1 "github.com/openshift/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
@@ -110,7 +110,7 @@ func (r *ApicastReconciler) Reconcile() (reconcile.Result, error) {
 		return reconcile.Result{}, err
 	}
 
-        err = r.reconcileGrafanaDashboard(component.ApicastGrafanaDashboard())
+	err = r.reconcileGrafanaDashboard(component.ApicastGrafanaDashboard())
 	if err != nil {
 		return reconcile.Result{}, err
 	}
@@ -162,7 +162,7 @@ func (r *ApicastReconciler) reconcileEnvironmentConfigMap(desiredConfigMap *v1.C
 	return reconciler.Reconcile(desiredConfigMap)
 }
 
-func (r *ApicastReconciler) reconcileGrafanaDashboard(desired *integreatlyv1alpha1.GrafanaDashboard) error {
+func (r *ApicastReconciler) reconcileGrafanaDashboard(desired *grafanav1alpha1.GrafanaDashboard) error {
 	reconciler := NewGrafanaDashboardBaseReconciler(r.BaseAPIManagerLogicReconciler, NewCreateOnlyGrafanaDashboardReconciler())
 	return reconciler.Reconcile(desired)
 }

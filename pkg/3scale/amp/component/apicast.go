@@ -106,6 +106,12 @@ func (apicast *Apicast) ProductionService() *v1.Service {
 					Port:       8090,
 					TargetPort: intstr.FromInt(8090),
 				},
+				v1.ServicePort{
+					Name:       "metrics",
+					Protocol:   v1.ProtocolTCP,
+					Port:       9421,
+					TargetPort: intstr.FromInt(9421),
+				},
 			},
 			Selector: map[string]string{"deploymentConfig": "apicast-production"},
 		},

@@ -2,7 +2,7 @@ package component
 
 import (
 	"github.com/3scale/3scale-operator/pkg/common"
-	integreatlyv1alpha1 "github.com/integr8ly/grafana-operator/pkg/apis/integreatly/v1alpha1"
+	grafanav1alpha1 "github.com/integr8ly/grafana-operator/v3/pkg/apis/integreatly/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -879,18 +879,18 @@ const (
 }`
 )
 
-func ApicastGrafanaDashboard() *integreatlyv1alpha1.GrafanaDashboard {
-	return &integreatlyv1alpha1.GrafanaDashboard{
+func ApicastGrafanaDashboard() *grafanav1alpha1.GrafanaDashboard {
+	return &grafanav1alpha1.GrafanaDashboard{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "apicast",
 			Labels: map[string]string{
 				"monitoring-key": common.MonitoringKey,
 			},
 		},
-		Spec: integreatlyv1alpha1.GrafanaDashboardSpec{
+		Spec: grafanav1alpha1.GrafanaDashboardSpec{
 			Json: apicastGrafanaDashboardJSON,
 			Name: "apicast.json",
-			Plugins: []integreatlyv1alpha1.GrafanaPlugin{
+			Plugins: []grafanav1alpha1.GrafanaPlugin{
 				{
 					Name:    "grafana-piechart-panel",
 					Version: "1.3.9",
