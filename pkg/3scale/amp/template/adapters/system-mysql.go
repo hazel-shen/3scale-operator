@@ -64,7 +64,7 @@ func (a *SystemMysqlAdapter) options() (*component.SystemMysqlOptions, error) {
 	mo.User = "${SYSTEM_DATABASE_USER}"
 	mo.Password = "${SYSTEM_DATABASE_PASSWORD}"
 	mo.RootPassword = "${SYSTEM_DATABASE_ROOT_PASSWORD}"
-	mo.DatabaseURL = "mysql2://root:" + "${SYSTEM_DATABASE_ROOT_PASSWORD}" + "@system-mysql/" + "${SYSTEM_DATABASE}"
+	mo.DatabaseURL = component.DefaultSystemMysqlDatabaseURL("${SYSTEM_DATABASE_ROOT_PASSWORD}", "${SYSTEM_DATABASE}")
 
 	mo.ContainerResourceRequirements = component.DefaultSystemMysqlResourceRequirements()
 

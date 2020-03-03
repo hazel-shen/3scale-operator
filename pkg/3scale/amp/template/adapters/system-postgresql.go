@@ -55,7 +55,7 @@ func (r *SystemPostgreSQLAdapter) options() (*component.SystemPostgreSQLOptions,
 	o.DatabaseName = "${SYSTEM_DATABASE}"
 	o.User = "${SYSTEM_DATABASE_USER}"
 	o.Password = "${SYSTEM_DATABASE_PASSWORD}"
-	o.DatabaseURL = "postgresql://${SYSTEM_DATABASE_USER}:" + "${SYSTEM_DATABASE_PASSWORD}" + "@system-postgresql/" + "${SYSTEM_DATABASE}"
+	o.DatabaseURL = component.DefaultSystemPostgresqlDatabaseURL("${SYSTEM_DATABASE_USER}", "${SYSTEM_DATABASE_PASSWORD}", "${SYSTEM_DATABASE}")
 
 	o.ContainerResourceRequirements = component.DefaultSystemPostgresqlResourceRequirements()
 
