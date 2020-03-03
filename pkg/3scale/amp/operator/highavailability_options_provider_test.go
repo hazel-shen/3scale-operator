@@ -85,7 +85,7 @@ func TestGetHighAvailabilityOptionsProvider(t *testing.T) {
 		t.Fatal(err)
 	}
 	expectedOptions := &component.HighAvailabilityOptions{
-		AppLabel:                            "-",
+		AppLabel:                            "${APP_LABEL}",
 		BackendRedisQueuesEndpoint:          backendQueueURL,
 		BackendRedisQueuesSentinelHosts:     "-",
 		BackendRedisQueuesSentinelRole:      "-",

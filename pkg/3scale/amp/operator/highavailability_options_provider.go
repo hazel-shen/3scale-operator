@@ -37,7 +37,7 @@ func (h *HighAvailabilityOptionsProvider) GetHighAvailabilityOptions() (*compone
 	}
 
 	// not required for operator, but required for templates
-	h.options.AppLabel = "-"
+	h.options.AppLabel = "${APP_LABEL}"
 	h.options.BackendRedisQueuesSentinelHosts = "-"
 	h.options.BackendRedisQueuesSentinelRole = "-"
 	h.options.BackendRedisStorageSentinelHosts = "-"
