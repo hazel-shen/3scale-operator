@@ -14,7 +14,7 @@ type Backend struct {
 
 func NewBackendAdapter(generatePDB bool) Adapter {
 	return NewAppenderAdapter(&Backend{
-		generatePodDisruptionBudget:generatePDB,
+		generatePodDisruptionBudget: generatePDB,
 	})
 }
 
@@ -46,12 +46,23 @@ func (b *Backend) options() (*component.BackendOptions, error) {
 	bo.ServiceEndpoint = component.DefaultBackendServiceEndpoint()
 	bo.StorageURL = component.DefaultBackendRedisStorageURL()
 	bo.QueuesURL = component.DefaultBackendRedisQueuesURL()
-	bo.ListenerReplicas = 1
-	bo.WorkerReplicas = 1
-	bo.CronReplicas = 1
+	var listenerReplicas int32 = 1
+	bo.ListenerReplicas = &listenerReplicas
+	var workerReplicas int32 = 1
+	bo.WorkerReplicas = &workerReplicas
+	var cronReplicas int32 = 1
+	bo.CronReplicas = &cronReplicas
 	bo.ListenerResourceRequirements = component.DefaultBackendListenerResourceRequirements()
 	bo.WorkerResourceRequirements = component.DefaultBackendWorkerResourceRequirements()
 	bo.CronResourceRequirements = component.DefaultCronResourceRequirements()
+	storageSentinelHosts := component.DefaultBackendStorageSentinelHosts()
+	bo.StorageSentinelHosts = &storageSentinelHosts
+	storageSentinelRole := component.DefaultBackendStorageSentinelRole()
+	bo.StorageSentinelRole = &storageSentinelRole
+	queuesSentinelHosts := component.DefaultBackendQueuesSentinelHosts()
+	bo.QueuesSentinelHosts = &queuesSentinelHosts
+	queuesSentinelRole := component.DefaultBackendQueuesSentinelRole()
+	bo.QueuesSentinelRole = &queuesSentinelRole
 	err := bo.Validate()
 	return bo, err
 }

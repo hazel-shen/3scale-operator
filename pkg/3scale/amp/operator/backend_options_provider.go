@@ -10,7 +10,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-type OperatorBackendOptionsProvider struct {
+type BackendOptionsProvider struct {
 	apimanager     *appsv1alpha1.APIManager
 	namespace      string
 	client         client.Client
@@ -18,8 +18,8 @@ type OperatorBackendOptionsProvider struct {
 	secretSource   *helper.SecretSource
 }
 
-func NewOperatorBackendOptionsProvider(apimanager *appsv1alpha1.APIManager, namespace string, client client.Client) *OperatorBackendOptionsProvider {
-	return &OperatorBackendOptionsProvider{
+func NewBackendOptionsProvider(apimanager *appsv1alpha1.APIManager, namespace string, client client.Client) *BackendOptionsProvider {
+	return &BackendOptionsProvider{
 		apimanager:     apimanager,
 		namespace:      namespace,
 		client:         client,
@@ -28,7 +28,7 @@ func NewOperatorBackendOptionsProvider(apimanager *appsv1alpha1.APIManager, name
 	}
 }
 
-func (o *OperatorBackendOptionsProvider) GetBackendOptions() (*component.BackendOptions, error) {
+func (o *BackendOptionsProvider) GetBackendOptions() (*component.BackendOptions, error) {
 	o.backendOptions.AppLabel = *o.apimanager.Spec.AppLabel
 	o.backendOptions.TenantName = *o.apimanager.Spec.TenantName
 	o.backendOptions.WildcardDomain = o.apimanager.Spec.WildcardDomain
@@ -45,7 +45,7 @@ func (o *OperatorBackendOptionsProvider) GetBackendOptions() (*component.Backend
 	return o.backendOptions, err
 }
 
-func (o *OperatorBackendOptionsProvider) setSecretBasedOptions() error {
+func (o *BackendOptionsProvider) setSecretBasedOptions() error {
 	cases := []struct {
 		field       *string
 		secretName  string
@@ -88,6 +88,22 @@ func (o *OperatorBackendOptionsProvider) setSecretBasedOptions() error {
 			component.BackendSecretBackendRedisQueuesURLFieldName,
 			component.DefaultBackendRedisQueuesURL(),
 		},
+	}
+
+	for _, option := range cases {
+		val, err := o.secretSource.FieldValue(option.secretName, option.secretField, option.defValue)
+		if err != nil {
+			return err
+		}
+		*option.field = val
+	}
+
+	pointercases := []struct {
+		field       **string
+		secretName  string
+		secretField string
+		defValue    string
+	}{
 		{
 			&o.backendOptions.StorageSentinelHosts,
 			component.BackendSecretBackendRedisSecretName,
@@ -114,31 +130,34 @@ func (o *OperatorBackendOptionsProvider) setSecretBasedOptions() error {
 		},
 	}
 
-	for _, option := range cases {
+	for _, option := range pointercases {
 		val, err := o.secretSource.FieldValue(option.secretName, option.secretField, option.defValue)
 		if err != nil {
 			return err
 		}
-		*option.field = val
+		*option.field = &val
 	}
 
 	return nil
 }
 
-func (o *OperatorBackendOptionsProvider) setResourceRequirementsOptions() {
+func (o *BackendOptionsProvider) setResourceRequirementsOptions() {
 	if *o.apimanager.Spec.ResourceRequirementsEnabled {
 		o.backendOptions.ListenerResourceRequirements = component.DefaultBackendListenerResourceRequirements()
 		o.backendOptions.WorkerResourceRequirements = component.DefaultBackendWorkerResourceRequirements()
 		o.backendOptions.CronResourceRequirements = component.DefaultCronResourceRequirements()
 	} else {
-		o.backendOptions.ListenerResourceRequirements = v1.ResourceRequirements{}
-		o.backendOptions.WorkerResourceRequirements = v1.ResourceRequirements{}
-		o.backendOptions.CronResourceRequirements = v1.ResourceRequirements{}
+		o.backendOptions.ListenerResourceRequirements = &v1.ResourceRequirements{}
+		o.backendOptions.WorkerResourceRequirements = &v1.ResourceRequirements{}
+		o.backendOptions.CronResourceRequirements = &v1.ResourceRequirements{}
 	}
 }
 
-func (o *OperatorBackendOptionsProvider) setReplicas() {
-	o.backendOptions.ListenerReplicas = int32(*o.apimanager.Spec.Backend.ListenerSpec.Replicas)
-	o.backendOptions.WorkerReplicas = int32(*o.apimanager.Spec.Backend.WorkerSpec.Replicas)
-	o.backendOptions.CronReplicas = int32(*o.apimanager.Spec.Backend.CronSpec.Replicas)
+func (o *BackendOptionsProvider) setReplicas() {
+	listenerReplicas := int32(*o.apimanager.Spec.Backend.ListenerSpec.Replicas)
+	o.backendOptions.ListenerReplicas = &listenerReplicas
+	workerReplicas := int32(*o.apimanager.Spec.Backend.WorkerSpec.Replicas)
+	o.backendOptions.WorkerReplicas = &workerReplicas
+	cronReplicas := int32(*o.apimanager.Spec.Backend.CronSpec.Replicas)
+	o.backendOptions.CronReplicas = &cronReplicas
 }

@@ -116,7 +116,7 @@ func (backend *Backend) WorkerDeploymentConfig() *appsv1.DeploymentConfig {
 							Kind: "ImageStreamTag",
 							Name: "amp-backend:latest"}}},
 			},
-			Replicas: backend.Options.WorkerReplicas,
+			Replicas: *backend.Options.WorkerReplicas,
 			Selector: map[string]string{"deploymentConfig": "backend-worker"},
 			Template: &v1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
@@ -141,7 +141,7 @@ func (backend *Backend) WorkerDeploymentConfig() *appsv1.DeploymentConfig {
 							Image:           "amp-backend:latest",
 							Args:            []string{"bin/3scale_backend_worker", "run"},
 							Env:             backend.buildBackendWorkerEnv(),
-							Resources:       backend.Options.WorkerResourceRequirements,
+							Resources:       *backend.Options.WorkerResourceRequirements,
 							ImagePullPolicy: v1.PullIfNotPresent,
 						},
 					},
@@ -188,7 +188,7 @@ func (backend *Backend) CronDeploymentConfig() *appsv1.DeploymentConfig {
 							Kind: "ImageStreamTag",
 							Name: "amp-backend:latest"}}},
 			},
-			Replicas: backend.Options.CronReplicas,
+			Replicas: *backend.Options.CronReplicas,
 			Selector: map[string]string{"deploymentConfig": "backend-cron"},
 			Template: &v1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
@@ -213,7 +213,7 @@ func (backend *Backend) CronDeploymentConfig() *appsv1.DeploymentConfig {
 							Image:           "amp-backend:latest",
 							Args:            []string{"backend-cron"},
 							Env:             backend.buildBackendCronEnv(),
-							Resources:       backend.Options.CronResourceRequirements,
+							Resources:       *backend.Options.CronResourceRequirements,
 							ImagePullPolicy: v1.PullIfNotPresent,
 						},
 					},
@@ -261,7 +261,7 @@ func (backend *Backend) ListenerDeploymentConfig() *appsv1.DeploymentConfig {
 							Kind: "ImageStreamTag",
 							Name: "amp-backend:latest"}}},
 			},
-			Replicas: backend.Options.ListenerReplicas,
+			Replicas: *backend.Options.ListenerReplicas,
 			Selector: map[string]string{"deploymentConfig": "backend-listener"},
 			Template: &v1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
@@ -278,7 +278,7 @@ func (backend *Backend) ListenerDeploymentConfig() *appsv1.DeploymentConfig {
 								Protocol:      v1.ProtocolTCP},
 						},
 						Env:       backend.buildBackendListenerEnv(),
-						Resources: backend.Options.ListenerResourceRequirements,
+						Resources: *backend.Options.ListenerResourceRequirements,
 						LivenessProbe: &v1.Probe{
 							Handler: v1.Handler{TCPSocket: &v1.TCPSocketAction{
 								Port: intstr.IntOrString{
@@ -402,10 +402,10 @@ func (backend *Backend) RedisSecret() *v1.Secret {
 		StringData: map[string]string{
 			BackendSecretBackendRedisStorageURLFieldName:           backend.Options.StorageURL,
 			BackendSecretBackendRedisQueuesURLFieldName:            backend.Options.QueuesURL,
-			BackendSecretBackendRedisStorageSentinelHostsFieldName: backend.Options.StorageSentinelHosts,
-			BackendSecretBackendRedisStorageSentinelRoleFieldName:  backend.Options.StorageSentinelRole,
-			BackendSecretBackendRedisQueuesSentinelHostsFieldName:  backend.Options.QueuesSentinelHosts,
-			BackendSecretBackendRedisQueuesSentinelRoleFieldName:   backend.Options.QueuesSentinelRole,
+			BackendSecretBackendRedisStorageSentinelHostsFieldName: *backend.Options.StorageSentinelHosts,
+			BackendSecretBackendRedisStorageSentinelRoleFieldName:  *backend.Options.StorageSentinelRole,
+			BackendSecretBackendRedisQueuesSentinelHostsFieldName:  *backend.Options.QueuesSentinelHosts,
+			BackendSecretBackendRedisQueuesSentinelRoleFieldName:   *backend.Options.QueuesSentinelRole,
 		},
 		Type: v1.SecretTypeOpaque,
 	}

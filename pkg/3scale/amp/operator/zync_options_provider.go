@@ -89,13 +89,15 @@ func (z *ZyncOptionsProvider) setResourceRequirementsOptions() {
 		z.zyncOptions.QueContainerResourceRequirements = component.DefaultZyncQueContainerResourceRequirements()
 		z.zyncOptions.DatabaseContainerResourceRequirements = component.DefaultZyncDatabaseContainerResourceRequirements()
 	} else {
-		z.zyncOptions.ContainerResourceRequirements = v1.ResourceRequirements{}
-		z.zyncOptions.QueContainerResourceRequirements = v1.ResourceRequirements{}
-		z.zyncOptions.DatabaseContainerResourceRequirements = v1.ResourceRequirements{}
+		z.zyncOptions.ContainerResourceRequirements = &v1.ResourceRequirements{}
+		z.zyncOptions.QueContainerResourceRequirements = &v1.ResourceRequirements{}
+		z.zyncOptions.DatabaseContainerResourceRequirements = &v1.ResourceRequirements{}
 	}
 }
 
 func (z *ZyncOptionsProvider) setReplicas() {
-	z.zyncOptions.ZyncReplicas = int32(*z.apimanager.Spec.Zync.AppSpec.Replicas)
-	z.zyncOptions.ZyncQueReplicas = int32(*z.apimanager.Spec.Zync.QueSpec.Replicas)
+	zyncReplicas := int32(*z.apimanager.Spec.Zync.AppSpec.Replicas)
+	z.zyncOptions.ZyncReplicas = &zyncReplicas
+	zyncQueReplicas := int32(*z.apimanager.Spec.Zync.QueSpec.Replicas)
+	z.zyncOptions.ZyncQueReplicas = &zyncQueReplicas
 }

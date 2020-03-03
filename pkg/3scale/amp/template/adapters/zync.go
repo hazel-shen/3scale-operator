@@ -11,7 +11,7 @@ type Zync struct {
 }
 
 func NewZyncAdapter(generatePDB bool) Adapter {
-	return NewAppenderAdapter(&Zync{generatePodDisruptionBudget:generatePDB})
+	return NewAppenderAdapter(&Zync{generatePodDisruptionBudget: generatePDB})
 }
 
 func (z *Zync) Parameters() []templatev1.Parameter {
@@ -59,8 +59,10 @@ func (z *Zync) options() (*component.ZyncOptions, error) {
 	zo.DatabasePassword = "${ZYNC_DATABASE_PASSWORD}"
 	zo.SecretKeyBase = "${ZYNC_SECRET_KEY_BASE}"
 
-	zo.ZyncReplicas = 1
-	zo.ZyncQueReplicas = 1
+	var zyncReplicas int32 = 1
+	zo.ZyncReplicas = &zyncReplicas
+	var zyncQueReplicas int32 = 1
+	zo.ZyncQueReplicas = &zyncQueReplicas
 
 	zo.ContainerResourceRequirements = component.DefaultZyncContainerResourceRequirements()
 	zo.QueContainerResourceRequirements = component.DefaultZyncQueContainerResourceRequirements()

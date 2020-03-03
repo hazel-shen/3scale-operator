@@ -10,13 +10,13 @@ import (
 )
 
 type SystemMysqlOptions struct {
-	AppLabel                      string                  `validate:"required"`
-	DatabaseName                  string                  `validate:"required"`
-	User                          string                  `validate:"required"`
-	Password                      string                  `validate:"required"`
-	RootPassword                  string                  `validate:"required"`
-	DatabaseURL                   string                  `validate:"required"`
-	ContainerResourceRequirements v1.ResourceRequirements `validate:"-"`
+	AppLabel                      string                   `validate:"required"`
+	DatabaseName                  string                   `validate:"required"`
+	User                          string                   `validate:"required"`
+	Password                      string                   `validate:"required"`
+	RootPassword                  string                   `validate:"required"`
+	DatabaseURL                   string                   `validate:"required"`
+	ContainerResourceRequirements *v1.ResourceRequirements `validate:"required"`
 }
 
 func NewSystemMysqlOptions() *SystemMysqlOptions {
@@ -28,8 +28,8 @@ func (s *SystemMysqlOptions) Validate() error {
 	return validate.Struct(s)
 }
 
-func DefaultSystemMysqlResourceRequirements() v1.ResourceRequirements {
-	return v1.ResourceRequirements{
+func DefaultSystemMysqlResourceRequirements() *v1.ResourceRequirements {
+	return &v1.ResourceRequirements{
 		Limits: v1.ResourceList{
 			v1.ResourceMemory: resource.MustParse("2Gi"),
 		},

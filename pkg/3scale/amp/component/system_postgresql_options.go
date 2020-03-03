@@ -10,12 +10,12 @@ import (
 )
 
 type SystemPostgreSQLOptions struct {
-	ContainerResourceRequirements v1.ResourceRequirements `validate:"-"`
-	AppLabel                      string                  `validate:"required"`
-	User                          string                  `validate:"required"`
-	Password                      string                  `validate:"required"`
-	DatabaseName                  string                  `validate:"required"`
-	DatabaseURL                   string                  `validate:"required"`
+	ContainerResourceRequirements *v1.ResourceRequirements `validate:"required"`
+	AppLabel                      string                   `validate:"required"`
+	User                          string                   `validate:"required"`
+	Password                      string                   `validate:"required"`
+	DatabaseName                  string                   `validate:"required"`
+	DatabaseURL                   string                   `validate:"required"`
 }
 
 func NewSystemPostgreSQLOptions() *SystemPostgreSQLOptions {
@@ -27,8 +27,8 @@ func (s *SystemPostgreSQLOptions) Validate() error {
 	return validate.Struct(s)
 }
 
-func DefaultSystemPostgresqlResourceRequirements() v1.ResourceRequirements {
-	return v1.ResourceRequirements{
+func DefaultSystemPostgresqlResourceRequirements() *v1.ResourceRequirements {
+	return &v1.ResourceRequirements{
 		Limits: v1.ResourceList{
 			v1.ResourceMemory: resource.MustParse("2Gi"),
 		},

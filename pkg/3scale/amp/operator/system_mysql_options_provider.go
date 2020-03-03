@@ -129,6 +129,6 @@ func (s *SystemMysqlOptionsProvider) setResourceRequirementsOptions() {
 	if *s.apimanager.Spec.ResourceRequirementsEnabled {
 		s.mysqlOptions.ContainerResourceRequirements = component.DefaultSystemMysqlResourceRequirements()
 	} else {
-		s.mysqlOptions.ContainerResourceRequirements = v1.ResourceRequirements{}
+		s.mysqlOptions.ContainerResourceRequirements = &v1.ResourceRequirements{}
 	}
 }

@@ -52,7 +52,7 @@ func TestGetSystemPostgreSQLOptionsProvider(t *testing.T) {
 			},
 			func(opts *component.SystemPostgreSQLOptions) *component.SystemPostgreSQLOptions {
 				expecteOpts := defaultSystemPostgreSQLOptions(opts)
-				expecteOpts.ContainerResourceRequirements = v1.ResourceRequirements{}
+				expecteOpts.ContainerResourceRequirements = &v1.ResourceRequirements{}
 				return expecteOpts
 			},
 		},

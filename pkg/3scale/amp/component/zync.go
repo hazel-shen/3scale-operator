@@ -229,7 +229,7 @@ func (zync *Zync) DeploymentConfig() *appsv1.DeploymentConfig {
 					},
 				},
 			},
-			Replicas: zync.Options.ZyncReplicas,
+			Replicas: *zync.Options.ZyncReplicas,
 			Selector: map[string]string{"deploymentConfig": "zync"},
 			Template: &v1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
@@ -306,7 +306,7 @@ func (zync *Zync) DeploymentConfig() *appsv1.DeploymentConfig {
 								SuccessThreshold:    1,
 								FailureThreshold:    3,
 							},
-							Resources: zync.Options.ContainerResourceRequirements,
+							Resources: *zync.Options.ContainerResourceRequirements,
 						},
 					},
 				},
@@ -356,7 +356,7 @@ func (zync *Zync) QueDeploymentConfig() *appsv1.DeploymentConfig {
 			},
 		},
 		Spec: appsv1.DeploymentConfigSpec{
-			Replicas: zync.Options.ZyncQueReplicas,
+			Replicas: *zync.Options.ZyncQueReplicas,
 			Selector: map[string]string{"deploymentConfig": "zync-que"},
 			Strategy: appsv1.DeploymentStrategy{
 				Type: appsv1.DeploymentStrategyTypeRolling,
@@ -431,7 +431,7 @@ func (zync *Zync) QueDeploymentConfig() *appsv1.DeploymentConfig {
 							Ports: []v1.ContainerPort{
 								v1.ContainerPort{Name: "metrics", ContainerPort: 9394, Protocol: v1.ProtocolTCP},
 							},
-							Resources: zync.Options.QueContainerResourceRequirements,
+							Resources: *zync.Options.QueContainerResourceRequirements,
 							Env:       zync.commonZyncEnvVars(),
 						},
 					},
@@ -544,7 +544,7 @@ func (zync *Zync) DatabaseDeploymentConfig() *appsv1.DeploymentConfig {
 									},
 								},
 							},
-							Resources: zync.Options.DatabaseContainerResourceRequirements,
+							Resources: *zync.Options.DatabaseContainerResourceRequirements,
 						},
 					},
 					Volumes: []v1.Volume{

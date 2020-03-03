@@ -40,12 +40,14 @@ func (a *ApicastOptionsProvider) setResourceRequirementsOptions() {
 		a.apicastOptions.ProductionResourceRequirements = component.DefaultProductionResourceRequirements()
 		a.apicastOptions.StagingResourceRequirements = component.DefaultStagingResourceRequirements()
 	} else {
-		a.apicastOptions.ProductionResourceRequirements = v1.ResourceRequirements{}
-		a.apicastOptions.StagingResourceRequirements = v1.ResourceRequirements{}
+		a.apicastOptions.ProductionResourceRequirements = &v1.ResourceRequirements{}
+		a.apicastOptions.StagingResourceRequirements = &v1.ResourceRequirements{}
 	}
 }
 
 func (a *ApicastOptionsProvider) setReplicas() {
-	a.apicastOptions.ProductionReplicas = int32(*a.apimanager.Spec.Apicast.ProductionSpec.Replicas)
-	a.apicastOptions.StagingReplicas = int32(*a.apimanager.Spec.Apicast.StagingSpec.Replicas)
+	productionReplicas := int32(*a.apimanager.Spec.Apicast.ProductionSpec.Replicas)
+	a.apicastOptions.ProductionReplicas = &productionReplicas
+	stagingReplicas := int32(*a.apimanager.Spec.Apicast.StagingSpec.Replicas)
+	a.apicastOptions.StagingReplicas = &stagingReplicas
 }

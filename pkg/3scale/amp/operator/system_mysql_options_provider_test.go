@@ -58,7 +58,7 @@ func TestGetMysqlOptionsProvider(t *testing.T) {
 			},
 			func(opts *component.SystemMysqlOptions) *component.SystemMysqlOptions {
 				expecteOpts := defaultSystemMysqlOptions(opts)
-				expecteOpts.ContainerResourceRequirements = v1.ResourceRequirements{}
+				expecteOpts.ContainerResourceRequirements = &v1.ResourceRequirements{}
 				return expecteOpts
 			},
 		},

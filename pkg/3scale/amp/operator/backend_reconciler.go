@@ -157,7 +157,7 @@ func (r *BackendReconciler) Reconcile() (reconcile.Result, error) {
 }
 
 func (r *BackendReconciler) backend() (*component.Backend, error) {
-	optsProvider := NewOperatorBackendOptionsProvider(r.apiManager, r.apiManager.Namespace, r.Client())
+	optsProvider := NewBackendOptionsProvider(r.apiManager, r.apiManager.Namespace, r.Client())
 	opts, err := optsProvider.GetBackendOptions()
 	if err != nil {
 		return nil, err

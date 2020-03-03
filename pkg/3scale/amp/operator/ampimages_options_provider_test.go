@@ -22,6 +22,7 @@ const (
 )
 
 func defaultAmpImageOptions() *component.AmpImagesOptions {
+	tmpInsecureImportPolicy := insecureImportPolicy
 	return &component.AmpImagesOptions{
 		AppLabel:                    appLabel,
 		AmpRelease:                  product.ThreescaleRelease,
@@ -31,7 +32,7 @@ func defaultAmpImageOptions() *component.AmpImagesOptions {
 		ZyncImage:                   ZyncImageURL(),
 		ZyncDatabasePostgreSQLImage: component.ZyncPostgreSQLImageURL(),
 		SystemMemcachedImage:        SystemMemcachedImageURL(),
-		InsecureImportPolicy:        insecureImportPolicy,
+		InsecureImportPolicy:        &tmpInsecureImportPolicy,
 	}
 }
 

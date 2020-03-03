@@ -11,16 +11,16 @@ import (
 
 // ZyncOptions container object with all required to create components
 type ZyncOptions struct {
-	DatabaseURL                           string                  `validate:"required"`
-	ContainerResourceRequirements         v1.ResourceRequirements `validate:"-"`
-	QueContainerResourceRequirements      v1.ResourceRequirements `validate:"-"`
-	DatabaseContainerResourceRequirements v1.ResourceRequirements `validate:"-"`
-	AppLabel                              string                  `validate:"required"`
-	AuthenticationToken                   string                  `validate:"required"`
-	DatabasePassword                      string                  `validate:"required"`
-	SecretKeyBase                         string                  `validate:"required"`
-	ZyncReplicas                          int32
-	ZyncQueReplicas                       int32
+	DatabaseURL                           string                   `validate:"required"`
+	ContainerResourceRequirements         *v1.ResourceRequirements `validate:"required"`
+	QueContainerResourceRequirements      *v1.ResourceRequirements `validate:"required"`
+	DatabaseContainerResourceRequirements *v1.ResourceRequirements `validate:"required"`
+	AppLabel                              string                   `validate:"required"`
+	AuthenticationToken                   string                   `validate:"required"`
+	DatabasePassword                      string                   `validate:"required"`
+	SecretKeyBase                         string                   `validate:"required"`
+	ZyncReplicas                          *int32                   `validate:"required"`
+	ZyncQueReplicas                       *int32                   `validate:"required"`
 }
 
 func NewZyncOptions() *ZyncOptions {
@@ -48,8 +48,8 @@ func DefaultZyncDatabaseURL(password string) string {
 	return fmt.Sprintf("postgresql://zync:%s@zync-database:5432/zync_production", password)
 }
 
-func DefaultZyncContainerResourceRequirements() v1.ResourceRequirements {
-	return v1.ResourceRequirements{
+func DefaultZyncContainerResourceRequirements() *v1.ResourceRequirements {
+	return &v1.ResourceRequirements{
 		Limits: v1.ResourceList{
 			v1.ResourceCPU:    resource.MustParse("1"),
 			v1.ResourceMemory: resource.MustParse("512Mi"),
@@ -61,8 +61,8 @@ func DefaultZyncContainerResourceRequirements() v1.ResourceRequirements {
 	}
 }
 
-func DefaultZyncQueContainerResourceRequirements() v1.ResourceRequirements {
-	return v1.ResourceRequirements{
+func DefaultZyncQueContainerResourceRequirements() *v1.ResourceRequirements {
+	return &v1.ResourceRequirements{
 		Limits: v1.ResourceList{
 			v1.ResourceCPU:    resource.MustParse("1"),
 			v1.ResourceMemory: resource.MustParse("512Mi"),
@@ -74,8 +74,8 @@ func DefaultZyncQueContainerResourceRequirements() v1.ResourceRequirements {
 	}
 }
 
-func DefaultZyncDatabaseContainerResourceRequirements() v1.ResourceRequirements {
-	return v1.ResourceRequirements{
+func DefaultZyncDatabaseContainerResourceRequirements() *v1.ResourceRequirements {
+	return &v1.ResourceRequirements{
 		Limits: v1.ResourceList{
 			v1.ResourceCPU:    resource.MustParse("250m"),
 			v1.ResourceMemory: resource.MustParse("2G"),

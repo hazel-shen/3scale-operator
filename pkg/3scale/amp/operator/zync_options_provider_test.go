@@ -44,6 +44,8 @@ func basicApimanagerSpecTestZyncOptions() *appsv1alpha1.APIManager {
 }
 
 func defaultZyncOptions(opts *component.ZyncOptions) *component.ZyncOptions {
+	tmpZyncReplicas := int32(zyncReplica)
+	tmpZyncQueReplicas := int32(zyncQueReplica)
 	expectedOpts := &component.ZyncOptions{
 		AppLabel:                              appLabel,
 		ContainerResourceRequirements:         component.DefaultZyncContainerResourceRequirements(),
@@ -52,8 +54,8 @@ func defaultZyncOptions(opts *component.ZyncOptions) *component.ZyncOptions {
 		AuthenticationToken:                   opts.AuthenticationToken,
 		DatabasePassword:                      opts.DatabasePassword,
 		SecretKeyBase:                         opts.SecretKeyBase,
-		ZyncReplicas:                          int32(zyncReplica),
-		ZyncQueReplicas:                       int32(zyncQueReplica),
+		ZyncReplicas:                          &tmpZyncReplicas,
+		ZyncQueReplicas:                       &tmpZyncQueReplicas,
 	}
 
 	expectedOpts.DatabaseURL = component.DefaultZyncDatabaseURL(expectedOpts.DatabasePassword)
@@ -83,9 +85,9 @@ func TestGetZyncOptionsProvider(t *testing.T) {
 			},
 			func(opts *component.ZyncOptions) *component.ZyncOptions {
 				expectedOpts := defaultZyncOptions(opts)
-				expectedOpts.ContainerResourceRequirements = v1.ResourceRequirements{}
-				expectedOpts.QueContainerResourceRequirements = v1.ResourceRequirements{}
-				expectedOpts.DatabaseContainerResourceRequirements = v1.ResourceRequirements{}
+				expectedOpts.ContainerResourceRequirements = &v1.ResourceRequirements{}
+				expectedOpts.QueContainerResourceRequirements = &v1.ResourceRequirements{}
+				expectedOpts.DatabaseContainerResourceRequirements = &v1.ResourceRequirements{}
 				return expectedOpts
 			},
 		},

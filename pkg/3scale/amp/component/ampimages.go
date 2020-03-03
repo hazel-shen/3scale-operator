@@ -77,7 +77,7 @@ func (ampImages *AmpImages) BackendImageStream() *imagev1.ImageStream {
 						Name: ampImages.Options.BackendImage,
 					},
 					ImportPolicy: imagev1.TagImportPolicy{
-						Insecure: ampImages.Options.InsecureImportPolicy,
+						Insecure: *ampImages.Options.InsecureImportPolicy,
 					},
 				},
 			},
@@ -120,7 +120,7 @@ func (ampImages *AmpImages) ZyncImageStream() *imagev1.ImageStream {
 						Name: ampImages.Options.ZyncImage,
 					},
 					ImportPolicy: imagev1.TagImportPolicy{
-						Insecure: ampImages.Options.InsecureImportPolicy,
+						Insecure: *ampImages.Options.InsecureImportPolicy,
 					},
 				},
 			},
@@ -163,7 +163,7 @@ func (ampImages *AmpImages) APICastImageStream() *imagev1.ImageStream {
 						Name: ampImages.Options.ApicastImage,
 					},
 					ImportPolicy: imagev1.TagImportPolicy{
-						Insecure: ampImages.Options.InsecureImportPolicy,
+						Insecure: *ampImages.Options.InsecureImportPolicy,
 					},
 				},
 			},
@@ -206,7 +206,7 @@ func (ampImages *AmpImages) SystemImageStream() *imagev1.ImageStream {
 						Name: ampImages.Options.SystemImage,
 					},
 					ImportPolicy: imagev1.TagImportPolicy{
-						Insecure: ampImages.Options.InsecureImportPolicy,
+						Insecure: *ampImages.Options.InsecureImportPolicy,
 					},
 				},
 			},
@@ -249,7 +249,7 @@ func (ampImages *AmpImages) ZyncDatabasePostgreSQLImageStream() *imagev1.ImageSt
 						Name: ampImages.Options.ZyncDatabasePostgreSQLImage,
 					},
 					ImportPolicy: imagev1.TagImportPolicy{
-						Insecure: ampImages.Options.InsecureImportPolicy,
+						Insecure: *ampImages.Options.InsecureImportPolicy,
 					},
 				},
 			},
@@ -292,7 +292,7 @@ func (ampImages *AmpImages) SystemMemcachedImageStream() *imagev1.ImageStream {
 						Name: ampImages.Options.SystemMemcachedImage,
 					},
 					ImportPolicy: imagev1.TagImportPolicy{
-						Insecure: ampImages.Options.InsecureImportPolicy,
+						Insecure: *ampImages.Options.InsecureImportPolicy,
 					},
 				},
 			},

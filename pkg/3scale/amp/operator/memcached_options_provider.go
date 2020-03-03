@@ -31,6 +31,6 @@ func (m *MemcachedOptionsProvider) setResourceRequirementsOptions() {
 	if *m.apimanager.Spec.ResourceRequirementsEnabled {
 		m.memcachedOptions.ResourceRequirements = component.DefaultMemcachedResourceRequirements()
 	} else {
-		m.memcachedOptions.ResourceRequirements = v1.ResourceRequirements{}
+		m.memcachedOptions.ResourceRequirements = &v1.ResourceRequirements{}
 	}
 }

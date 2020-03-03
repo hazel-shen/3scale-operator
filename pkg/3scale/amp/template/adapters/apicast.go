@@ -11,7 +11,7 @@ type Apicast struct {
 }
 
 func NewApicastAdapter(generatePDB bool) Adapter {
-	return NewAppenderAdapter(&Apicast{generatePodDisruptionBudget:generatePDB})
+	return NewAppenderAdapter(&Apicast{generatePodDisruptionBudget: generatePDB})
 }
 
 func (a *Apicast) Parameters() []templatev1.Parameter {
@@ -75,8 +75,10 @@ func (a *Apicast) options() (*component.ApicastOptions, error) {
 	ao.ProductionResourceRequirements = component.DefaultProductionResourceRequirements()
 	ao.StagingResourceRequirements = component.DefaultStagingResourceRequirements()
 
-	ao.ProductionReplicas = 1
-	ao.StagingReplicas = 1
+	var productionReplicas int32 = 1
+	ao.ProductionReplicas = &productionReplicas
+	var stagingReplicas int32 = 1
+	ao.StagingReplicas = &stagingReplicas
 
 	err := ao.Validate()
 	return ao, err

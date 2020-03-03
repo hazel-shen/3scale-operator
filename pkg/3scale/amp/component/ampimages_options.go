@@ -14,7 +14,7 @@ type AmpImagesOptions struct {
 	ZyncImage                   string `validate:"required"`
 	ZyncDatabasePostgreSQLImage string `validate:"required"`
 	SystemMemcachedImage        string `validate:"required"`
-	InsecureImportPolicy        bool
+	InsecureImportPolicy        *bool  `validate:"required"`
 }
 
 func NewAmpImagesOptions() *AmpImagesOptions {

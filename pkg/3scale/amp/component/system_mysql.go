@@ -185,7 +185,7 @@ func (mysql *SystemMysql) DeploymentConfig() *appsv1.DeploymentConfig {
 								envVarFromValue("MYSQL_LOWER_CASE_TABLE_NAMES", "1"),
 								envVarFromValue("MYSQL_DEFAULTS_FILE", "/etc/my-extra/my.cnf"),
 							},
-							Resources: mysql.Options.ContainerResourceRequirements,
+							Resources: *mysql.Options.ContainerResourceRequirements,
 							VolumeMounts: []v1.VolumeMount{
 								v1.VolumeMount{
 									Name:      "mysql-storage",

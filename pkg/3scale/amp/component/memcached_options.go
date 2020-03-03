@@ -7,8 +7,8 @@ import (
 )
 
 type MemcachedOptions struct {
-	AppLabel             string                  `validate:"required"`
-	ResourceRequirements v1.ResourceRequirements `validate:"-"`
+	AppLabel             string                   `validate:"required"`
+	ResourceRequirements *v1.ResourceRequirements `validate:"required"`
 }
 
 func NewMemcachedOptions() *MemcachedOptions {
@@ -20,8 +20,8 @@ func (m *MemcachedOptions) Validate() error {
 	return validate.Struct(m)
 }
 
-func DefaultMemcachedResourceRequirements() v1.ResourceRequirements {
-	return v1.ResourceRequirements{
+func DefaultMemcachedResourceRequirements() *v1.ResourceRequirements {
+	return &v1.ResourceRequirements{
 		Limits: v1.ResourceList{
 			v1.ResourceCPU:    resource.MustParse("250m"),
 			v1.ResourceMemory: resource.MustParse("96Mi"),

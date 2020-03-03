@@ -7,16 +7,16 @@ import (
 )
 
 type ApicastOptions struct {
-	AppLabel                       string                  `validate:"required"`
-	ManagementAPI                  string                  `validate:"required"`
-	OpenSSLVerify                  string                  `validate:"required"`
-	ResponseCodes                  string                  `validate:"required"`
-	TenantName                     string                  `validate:"required"`
-	WildcardDomain                 string                  `validate:"required"`
-	ProductionResourceRequirements v1.ResourceRequirements `validate:"-"`
-	StagingResourceRequirements    v1.ResourceRequirements `validate:"-"`
-	ProductionReplicas             int32
-	StagingReplicas                int32
+	AppLabel                       string                   `validate:"required"`
+	ManagementAPI                  string                   `validate:"required"`
+	OpenSSLVerify                  string                   `validate:"required"`
+	ResponseCodes                  string                   `validate:"required"`
+	TenantName                     string                   `validate:"required"`
+	WildcardDomain                 string                   `validate:"required"`
+	ProductionResourceRequirements *v1.ResourceRequirements `validate:"required"`
+	StagingResourceRequirements    *v1.ResourceRequirements `validate:"required"`
+	ProductionReplicas             *int32                   `validate:"required"`
+	StagingReplicas                *int32                   `validate:"required"`
 }
 
 func NewApicastOptions() *ApicastOptions {
@@ -28,8 +28,8 @@ func (a *ApicastOptions) Validate() error {
 	return validate.Struct(a)
 }
 
-func DefaultProductionResourceRequirements() v1.ResourceRequirements {
-	return v1.ResourceRequirements{
+func DefaultProductionResourceRequirements() *v1.ResourceRequirements {
+	return &v1.ResourceRequirements{
 		Limits: v1.ResourceList{
 			v1.ResourceCPU:    resource.MustParse("1000m"),
 			v1.ResourceMemory: resource.MustParse("128Mi"),
@@ -41,8 +41,8 @@ func DefaultProductionResourceRequirements() v1.ResourceRequirements {
 	}
 }
 
-func DefaultStagingResourceRequirements() v1.ResourceRequirements {
-	return v1.ResourceRequirements{
+func DefaultStagingResourceRequirements() *v1.ResourceRequirements {
+	return &v1.ResourceRequirements{
 		Limits: v1.ResourceList{
 			v1.ResourceCPU:    resource.MustParse("100m"),
 			v1.ResourceMemory: resource.MustParse("128Mi"),

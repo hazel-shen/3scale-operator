@@ -124,7 +124,7 @@ func (apicast *Apicast) StagingDeploymentConfig() *appsv1.DeploymentConfig {
 			},
 		},
 		Spec: appsv1.DeploymentConfigSpec{
-			Replicas: apicast.Options.StagingReplicas,
+			Replicas: *apicast.Options.StagingReplicas,
 			Selector: map[string]string{
 				"deploymentConfig": "apicast-staging",
 			},
@@ -198,7 +198,7 @@ func (apicast *Apicast) StagingDeploymentConfig() *appsv1.DeploymentConfig {
 							Image:           "amp-apicast:latest",
 							ImagePullPolicy: v1.PullIfNotPresent,
 							Name:            "apicast-staging",
-							Resources:       apicast.Options.StagingResourceRequirements,
+							Resources:       *apicast.Options.StagingResourceRequirements,
 							LivenessProbe: &v1.Probe{
 								Handler: v1.Handler{HTTPGet: &v1.HTTPGetAction{
 									Path: "/status/live",
@@ -237,7 +237,7 @@ func (apicast *Apicast) ProductionDeploymentConfig() *appsv1.DeploymentConfig {
 			},
 		},
 		Spec: appsv1.DeploymentConfigSpec{
-			Replicas: apicast.Options.ProductionReplicas,
+			Replicas: *apicast.Options.ProductionReplicas,
 			Selector: map[string]string{
 				"deploymentConfig": "apicast-production",
 			},
@@ -325,7 +325,7 @@ func (apicast *Apicast) ProductionDeploymentConfig() *appsv1.DeploymentConfig {
 							Image:           "amp-apicast:latest",
 							ImagePullPolicy: v1.PullIfNotPresent,
 							Name:            "apicast-production",
-							Resources:       apicast.Options.ProductionResourceRequirements,
+							Resources:       *apicast.Options.ProductionResourceRequirements,
 							LivenessProbe: &v1.Probe{
 								Handler: v1.Handler{HTTPGet: &v1.HTTPGetAction{
 									Path: "/status/live",

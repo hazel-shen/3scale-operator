@@ -117,6 +117,6 @@ func (s *SystemPostgresqlOptionsProvider) setResourceRequirementsOptions() {
 	if *s.apimanager.Spec.ResourceRequirementsEnabled {
 		s.options.ContainerResourceRequirements = component.DefaultSystemPostgresqlResourceRequirements()
 	} else {
-		s.options.ContainerResourceRequirements = v1.ResourceRequirements{}
+		s.options.ContainerResourceRequirements = &v1.ResourceRequirements{}
 	}
 }

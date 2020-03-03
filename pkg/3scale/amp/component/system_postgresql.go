@@ -152,7 +152,7 @@ func (p *SystemPostgreSQL) DeploymentConfig() *appsv1.DeploymentConfig {
 								// are deprecated we should be able to change this.
 								envVarFromValue("POSTGRESQL_DATABASE", p.Options.DatabaseName),
 							},
-							Resources: p.Options.ContainerResourceRequirements,
+							Resources: *p.Options.ContainerResourceRequirements,
 							VolumeMounts: []v1.VolumeMount{
 								v1.VolumeMount{
 									Name:      "postgresql-data",

@@ -44,6 +44,8 @@ func basicApimanagerTestApicastOptions() *appsv1alpha1.APIManager {
 }
 
 func defaultApicastOptions() *component.ApicastOptions {
+	tmpProductionReplicaCount := int32(productionReplicaCount)
+	tmpStagingReplicaCount := int32(stagingReplicaCount)
 	return &component.ApicastOptions{
 		AppLabel:                       appLabel,
 		ManagementAPI:                  apicastManagementAPI,
@@ -53,8 +55,8 @@ func defaultApicastOptions() *component.ApicastOptions {
 		WildcardDomain:                 wildcardDomain,
 		ProductionResourceRequirements: component.DefaultProductionResourceRequirements(),
 		StagingResourceRequirements:    component.DefaultStagingResourceRequirements(),
-		ProductionReplicas:             int32(productionReplicaCount),
-		StagingReplicas:                int32(stagingReplicaCount),
+		ProductionReplicas:             &tmpProductionReplicaCount,
+		StagingReplicas:                &tmpStagingReplicaCount,
 	}
 }
 
@@ -75,8 +77,8 @@ func TestGetApicastOptionsProvider(t *testing.T) {
 			},
 			func() *component.ApicastOptions {
 				opts := defaultApicastOptions()
-				opts.ProductionResourceRequirements = v1.ResourceRequirements{}
-				opts.StagingResourceRequirements = v1.ResourceRequirements{}
+				opts.ProductionResourceRequirements = &v1.ResourceRequirements{}
+				opts.StagingResourceRequirements = &v1.ResourceRequirements{}
 				return opts
 			},
 		},

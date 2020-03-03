@@ -75,7 +75,8 @@ func (i *ImagesAdapter) options() (*component.AmpImagesOptions, error) {
 	ao.ZyncImage = "${AMP_ZYNC_IMAGE}"
 	ao.ZyncDatabasePostgreSQLImage = "${ZYNC_DATABASE_IMAGE}"
 	ao.SystemMemcachedImage = "${MEMCACHED_IMAGE}"
-	ao.InsecureImportPolicy = false
+	falseValue := false
+	ao.InsecureImportPolicy = &falseValue
 
 	err := ao.Validate()
 	return ao, err

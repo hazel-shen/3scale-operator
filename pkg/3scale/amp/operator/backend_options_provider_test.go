@@ -19,6 +19,10 @@ const (
 	listenerReplicaCount int64 = 3
 	workerReplicaCount   int64 = 4
 	cronReplicaCount     int64 = 5
+	storageSentinelHost        = "storageSentinelHostsValue"
+	storageSentinelRole        = "storageSentinelRoleValue"
+	queuesSentinelHosts        = "queueSentinelHostsValue"
+	queuesSentinelRole         = "queueSentinelRoleValue"
 )
 
 func getInternalSecret() *v1.Secret {
@@ -41,10 +45,10 @@ func getRedisSecret() *v1.Secret {
 	data := map[string]string{
 		component.BackendSecretBackendRedisStorageURLFieldName:           "storageURLValue",
 		component.BackendSecretBackendRedisQueuesURLFieldName:            "queueURLValue",
-		component.BackendSecretBackendRedisStorageSentinelHostsFieldName: "storageSentinelHostsValue",
-		component.BackendSecretBackendRedisStorageSentinelRoleFieldName:  "storageSentinelRoleValue",
-		component.BackendSecretBackendRedisQueuesSentinelHostsFieldName:  "queueSentinelHostsValue",
-		component.BackendSecretBackendRedisQueuesSentinelRoleFieldName:   "queueSentinelRoleValue",
+		component.BackendSecretBackendRedisStorageSentinelHostsFieldName: storageSentinelHost,
+		component.BackendSecretBackendRedisStorageSentinelRoleFieldName:  storageSentinelRole,
+		component.BackendSecretBackendRedisQueuesSentinelHostsFieldName:  queuesSentinelHosts,
+		component.BackendSecretBackendRedisQueuesSentinelRoleFieldName:   queuesSentinelRole,
 	}
 	return GetTestSecret(namespace, component.BackendSecretBackendRedisSecretName, data)
 }
@@ -63,21 +67,29 @@ func basicApimanagerTestBackendOptions() *appsv1alpha1.APIManager {
 }
 
 func defaultBackendOptions(opts *component.BackendOptions) *component.BackendOptions {
+	tmpListenerReplicaCount := int32(listenerReplicaCount)
+	tmpWorkerReplicaCount := int32(workerReplicaCount)
+	tmpCronReplicaCount := int32(cronReplicaCount)
+	tmpStorageSentinelHosts := component.DefaultBackendStorageSentinelHosts()
+	tmpStorageSentinelRole := component.DefaultBackendStorageSentinelRole()
+	tmpQueuesSentinelHosts := component.DefaultBackendQueuesSentinelHosts()
+	tmpQueuesSentinelRole := component.DefaultBackendQueuesSentinelRole()
+
 	return &component.BackendOptions{
 		ServiceEndpoint:              component.DefaultBackendServiceEndpoint(),
 		RouteEndpoint:                fmt.Sprintf("https://backend-%s.%s", tenantName, wildcardDomain),
 		StorageURL:                   component.DefaultBackendRedisStorageURL(),
 		QueuesURL:                    component.DefaultBackendRedisQueuesURL(),
-		StorageSentinelHosts:         component.DefaultBackendStorageSentinelHosts(),
-		StorageSentinelRole:          component.DefaultBackendStorageSentinelRole(),
-		QueuesSentinelHosts:          component.DefaultBackendQueuesSentinelHosts(),
-		QueuesSentinelRole:           component.DefaultBackendQueuesSentinelRole(),
+		StorageSentinelHosts:         &tmpStorageSentinelHosts,
+		StorageSentinelRole:          &tmpStorageSentinelRole,
+		QueuesSentinelHosts:          &tmpQueuesSentinelHosts,
+		QueuesSentinelRole:           &tmpQueuesSentinelRole,
 		ListenerResourceRequirements: component.DefaultBackendListenerResourceRequirements(),
 		WorkerResourceRequirements:   component.DefaultBackendWorkerResourceRequirements(),
 		CronResourceRequirements:     component.DefaultCronResourceRequirements(),
-		ListenerReplicas:             int32(listenerReplicaCount),
-		WorkerReplicas:               int32(workerReplicaCount),
-		CronReplicas:                 int32(cronReplicaCount),
+		ListenerReplicas:             &tmpListenerReplicaCount,
+		WorkerReplicas:               &tmpWorkerReplicaCount,
+		CronReplicas:                 &tmpCronReplicaCount,
 		AppLabel:                     appLabel,
 		SystemBackendUsername:        component.DefaultSystemBackendUsername(),
 		SystemBackendPassword:        opts.SystemBackendPassword,
@@ -110,9 +122,9 @@ func TestGetBackendOptionsProvider(t *testing.T) {
 			},
 			func(in *component.BackendOptions) *component.BackendOptions {
 				opts := defaultBackendOptions(in)
-				opts.ListenerResourceRequirements = v1.ResourceRequirements{}
-				opts.WorkerResourceRequirements = v1.ResourceRequirements{}
-				opts.CronResourceRequirements = v1.ResourceRequirements{}
+				opts.ListenerResourceRequirements = &v1.ResourceRequirements{}
+				opts.WorkerResourceRequirements = &v1.ResourceRequirements{}
+				opts.CronResourceRequirements = &v1.ResourceRequirements{}
 				return opts
 			},
 		},
@@ -134,13 +146,18 @@ func TestGetBackendOptionsProvider(t *testing.T) {
 		},
 		{"RedisSecret", nil, nil, getRedisSecret(), basicApimanagerTestBackendOptions,
 			func(in *component.BackendOptions) *component.BackendOptions {
+				tmpStorageSentinelHosts := storageSentinelHost
+				tmpStorageSentinelRole := storageSentinelRole
+				tmpQueuesSentinelHosts := queuesSentinelHosts
+				tmpQueuesSentinelRole := queuesSentinelRole
+
 				opts := defaultBackendOptions(in)
 				opts.StorageURL = "storageURLValue"
 				opts.QueuesURL = "queueURLValue"
-				opts.StorageSentinelHosts = "storageSentinelHostsValue"
-				opts.StorageSentinelRole = "storageSentinelRoleValue"
-				opts.QueuesSentinelHosts = "queueSentinelHostsValue"
-				opts.QueuesSentinelRole = "queueSentinelRoleValue"
+				opts.StorageSentinelHosts = &tmpStorageSentinelHosts
+				opts.StorageSentinelRole = &tmpStorageSentinelRole
+				opts.QueuesSentinelHosts = &tmpQueuesSentinelHosts
+				opts.QueuesSentinelRole = &tmpQueuesSentinelRole
 				return opts
 			},
 		},
@@ -160,7 +177,7 @@ func TestGetBackendOptionsProvider(t *testing.T) {
 			}
 
 			cl := fake.NewFakeClient(objs...)
-			optsProvider := NewOperatorBackendOptionsProvider(tc.apimanagerFactory(), namespace, cl)
+			optsProvider := NewBackendOptionsProvider(tc.apimanagerFactory(), namespace, cl)
 			opts, err := optsProvider.GetBackendOptions()
 			if err != nil {
 				t.Error(err)

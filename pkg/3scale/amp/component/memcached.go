@@ -87,7 +87,7 @@ func (m *Memcached) DeploymentConfig() *appsv1.DeploymentConfig {
 									ContainerPort: 11211,
 									Protocol:      v1.ProtocolTCP},
 							},
-							Resources: m.Options.ResourceRequirements,
+							Resources: *m.Options.ResourceRequirements,
 							LivenessProbe: &v1.Probe{
 								Handler: v1.Handler{TCPSocket: &v1.TCPSocketAction{
 									Port: intstr.IntOrString{

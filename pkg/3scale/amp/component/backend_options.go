@@ -8,25 +8,25 @@ import (
 )
 
 type BackendOptions struct {
-	ServiceEndpoint              string `validate:"required"`
-	RouteEndpoint                string `validate:"required"`
-	StorageURL                   string `validate:"required"`
-	QueuesURL                    string `validate:"required"`
-	StorageSentinelHosts         string
-	StorageSentinelRole          string
-	QueuesSentinelHosts          string
-	QueuesSentinelRole           string
-	ListenerResourceRequirements v1.ResourceRequirements `validate:"-"`
-	WorkerResourceRequirements   v1.ResourceRequirements `validate:"-"`
-	CronResourceRequirements     v1.ResourceRequirements `validate:"-"`
-	ListenerReplicas             int32
-	WorkerReplicas               int32
-	CronReplicas                 int32
-	AppLabel                     string `validate:"required"`
-	SystemBackendUsername        string `validate:"required"`
-	SystemBackendPassword        string `validate:"required"`
-	TenantName                   string `validate:"required"`
-	WildcardDomain               string `validate:"required"`
+	ServiceEndpoint              string                   `validate:"required"`
+	RouteEndpoint                string                   `validate:"required"`
+	StorageURL                   string                   `validate:"required"`
+	QueuesURL                    string                   `validate:"required"`
+	StorageSentinelHosts         *string                  `validate:"required"`
+	StorageSentinelRole          *string                  `validate:"required"`
+	QueuesSentinelHosts          *string                  `validate:"required"`
+	QueuesSentinelRole           *string                  `validate:"required"`
+	ListenerResourceRequirements *v1.ResourceRequirements `validate:"required"`
+	WorkerResourceRequirements   *v1.ResourceRequirements `validate:"required"`
+	CronResourceRequirements     *v1.ResourceRequirements `validate:"required"`
+	ListenerReplicas             *int32                   `validate:"required"`
+	WorkerReplicas               *int32                   `validate:"required"`
+	CronReplicas                 *int32                   `validate:"required"`
+	AppLabel                     string                   `validate:"required"`
+	SystemBackendUsername        string                   `validate:"required"`
+	SystemBackendPassword        string                   `validate:"required"`
+	TenantName                   string                   `validate:"required"`
+	WildcardDomain               string                   `validate:"required"`
 }
 
 func NewBackendOptions() *BackendOptions {
@@ -50,8 +50,8 @@ func DefaultBackendRedisQueuesURL() string {
 	return "redis://backend-redis:6379/1"
 }
 
-func DefaultBackendListenerResourceRequirements() v1.ResourceRequirements {
-	return v1.ResourceRequirements{
+func DefaultBackendListenerResourceRequirements() *v1.ResourceRequirements {
+	return &v1.ResourceRequirements{
 		Limits: v1.ResourceList{
 			v1.ResourceCPU:    resource.MustParse("1000m"),
 			v1.ResourceMemory: resource.MustParse("700Mi"),
@@ -63,8 +63,8 @@ func DefaultBackendListenerResourceRequirements() v1.ResourceRequirements {
 	}
 }
 
-func DefaultBackendWorkerResourceRequirements() v1.ResourceRequirements {
-	return v1.ResourceRequirements{
+func DefaultBackendWorkerResourceRequirements() *v1.ResourceRequirements {
+	return &v1.ResourceRequirements{
 		Limits: v1.ResourceList{
 			v1.ResourceCPU:    resource.MustParse("1000m"),
 			v1.ResourceMemory: resource.MustParse("300Mi"),
@@ -76,8 +76,8 @@ func DefaultBackendWorkerResourceRequirements() v1.ResourceRequirements {
 	}
 }
 
-func DefaultCronResourceRequirements() v1.ResourceRequirements {
-	return v1.ResourceRequirements{
+func DefaultCronResourceRequirements() *v1.ResourceRequirements {
+	return &v1.ResourceRequirements{
 		Limits: v1.ResourceList{
 			v1.ResourceCPU:    resource.MustParse("150m"),
 			v1.ResourceMemory: resource.MustParse("80Mi"),

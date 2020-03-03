@@ -36,7 +36,7 @@ func TestMemcachedOptionsProvider(t *testing.T) {
 			},
 			func() *component.MemcachedOptions {
 				opts := defaultMemcachedOptions()
-				opts.ResourceRequirements = v1.ResourceRequirements{}
+				opts.ResourceRequirements = &v1.ResourceRequirements{}
 				return opts
 			},
 		},
