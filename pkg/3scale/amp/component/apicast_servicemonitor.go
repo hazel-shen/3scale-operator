@@ -17,7 +17,10 @@ func ApicastServiceMonitor() *monitoringv1.ServiceMonitor {
 		},
 		Spec: monitoringv1.ServiceMonitorSpec{
 			Endpoints: []monitoringv1.Endpoint{{
-				Port: "metrics",
+				Port:            "metrics",
+				Path:            "/metrics",
+				Interval:        "10s",
+				Scheme:          "http",
 			}},
 			Selector: metav1.LabelSelector{
 				MatchLabels: map[string]string{
