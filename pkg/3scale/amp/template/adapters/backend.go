@@ -1,8 +1,6 @@
 package adapters
 
 import (
-	"fmt"
-
 	"github.com/3scale/3scale-operator/pkg/3scale/amp/component"
 	"github.com/3scale/3scale-operator/pkg/common"
 	templatev1 "github.com/openshift/api/template/v1"
@@ -42,7 +40,7 @@ func (b *Backend) options() (*component.BackendOptions, error) {
 	bo.SystemBackendPassword = "${SYSTEM_BACKEND_PASSWORD}"
 	bo.TenantName = "${TENANT_NAME}"
 	bo.WildcardDomain = "${WILDCARD_DOMAIN}"
-	bo.RouteEndpoint = fmt.Sprintf("https://backend-%s.%s", "${TENANT_NAME}", "${WILDCARD_DOMAIN}")
+	bo.RouteEndpoint = component.DefaultBackendRouteEndpoint("${TENANT_NAME}", "${WILDCARD_DOMAIN}")
 	bo.ServiceEndpoint = component.DefaultBackendServiceEndpoint()
 	bo.StorageURL = component.DefaultBackendRedisStorageURL()
 	bo.QueuesURL = component.DefaultBackendRedisQueuesURL()

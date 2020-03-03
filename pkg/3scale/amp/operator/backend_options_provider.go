@@ -1,8 +1,6 @@
 package operator
 
 import (
-	"fmt"
-
 	"github.com/3scale/3scale-operator/pkg/3scale/amp/component"
 	appsv1alpha1 "github.com/3scale/3scale-operator/pkg/apis/apps/v1alpha1"
 	"github.com/3scale/3scale-operator/pkg/helper"
@@ -74,7 +72,7 @@ func (o *BackendOptionsProvider) setSecretBasedOptions() error {
 			&o.backendOptions.RouteEndpoint,
 			component.BackendSecretBackendListenerSecretName,
 			component.BackendSecretBackendListenerRouteEndpointFieldName,
-			fmt.Sprintf("https://backend-%s.%s", *o.apimanager.Spec.TenantName, o.apimanager.Spec.WildcardDomain),
+			component.DefaultBackendRouteEndpoint(*o.apimanager.Spec.TenantName, o.apimanager.Spec.WildcardDomain),
 		},
 		{
 			&o.backendOptions.StorageURL,

@@ -1,6 +1,8 @@
 package component
 
 import (
+	"fmt"
+
 	oprand "github.com/3scale/3scale-operator/pkg/crypto/rand"
 	"github.com/go-playground/validator/v10"
 	v1 "k8s.io/api/core/v1"
@@ -111,4 +113,8 @@ func DefaultBackendQueuesSentinelHosts() string {
 
 func DefaultBackendQueuesSentinelRole() string {
 	return ""
+}
+
+func DefaultBackendRouteEndpoint(tenant, wildcardDomain string) string {
+	return fmt.Sprintf("https://backend-%s.%s", tenant, wildcardDomain)
 }
