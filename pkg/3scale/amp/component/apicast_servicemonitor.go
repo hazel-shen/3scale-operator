@@ -7,20 +7,22 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func ApicastServiceMonitor() *monitoringv1.ServiceMonitor {
+func ApicastProductionServiceMonitor() *monitoringv1.ServiceMonitor {
 	return &monitoringv1.ServiceMonitor{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "apicast",
+			Name: "apicast-production",
 			Labels: map[string]string{
+				// TODO from options
 				"monitoring-key": common.MonitoringKey,
+				"app":            appsv1alpha1.Default3scaleAppLabel,
 			},
 		},
 		Spec: monitoringv1.ServiceMonitorSpec{
 			Endpoints: []monitoringv1.Endpoint{{
-				Port:            "metrics",
-				Path:            "/metrics",
-				Interval:        "10s",
-				Scheme:          "http",
+				Port:     "metrics",
+				Path:     "/metrics",
+				Interval: "10s",
+				Scheme:   "http",
 			}},
 			Selector: metav1.LabelSelector{
 				MatchLabels: map[string]string{
@@ -28,6 +30,35 @@ func ApicastServiceMonitor() *monitoringv1.ServiceMonitor {
 					"app":                          appsv1alpha1.Default3scaleAppLabel,
 					"threescale_component":         "apicast",
 					"threescale_component_element": "production",
+				},
+			},
+		},
+	}
+}
+
+func ApicastStagingServiceMonitor() *monitoringv1.ServiceMonitor {
+	return &monitoringv1.ServiceMonitor{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "apicast-staging",
+			Labels: map[string]string{
+				// TODO from options
+				"monitoring-key": common.MonitoringKey,
+				"app":            appsv1alpha1.Default3scaleAppLabel,
+			},
+		},
+		Spec: monitoringv1.ServiceMonitorSpec{
+			Endpoints: []monitoringv1.Endpoint{{
+				Port:     "metrics",
+				Path:     "/metrics",
+				Interval: "10s",
+				Scheme:   "http",
+			}},
+			Selector: metav1.LabelSelector{
+				MatchLabels: map[string]string{
+					// TODO from options
+					"app":                          appsv1alpha1.Default3scaleAppLabel,
+					"threescale_component":         "apicast",
+					"threescale_component_element": "staging",
 				},
 			},
 		},

@@ -120,7 +120,12 @@ func (r *ApicastReconciler) Reconcile() (reconcile.Result, error) {
 		return reconcile.Result{}, err
 	}
 
-	err = r.reconcileServiceMonitor(component.ApicastServiceMonitor())
+	err = r.reconcileServiceMonitor(component.ApicastProductionServiceMonitor())
+	if err != nil {
+		return reconcile.Result{}, err
+	}
+
+	err = r.reconcileServiceMonitor(component.ApicastStagingServiceMonitor())
 	if err != nil {
 		return reconcile.Result{}, err
 	}
